@@ -1,0 +1,18 @@
+{
+  "name": "全屏图片查看器",
+  "manifest_version": 2,
+  "version": "1.0",
+  "description": "全屏图片查看器: 可以隐藏网页内其它内容,只显示大图",
+  "background": { "scripts": ["background.js"] },
+  "permissions": [
+    "tabs", "http://*/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["http://*/*"],
+      "css": [],
+      "js": ["content.js"],
+      "run_at" : "document_end"
+    }
+  ]
+}
