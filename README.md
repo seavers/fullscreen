@@ -2,7 +2,7 @@ fullscreen picture viewer
 ========
 
 ## 全屏图片查看器 chrome 扩展
- * 用于限藏掉网页内其它内容,只留下大图
+ * 用于隐藏掉网页内其它内容,只留下大图
  * chrome 安装地址: [fullscreen.crx](http://www.lianghaijun.com/download/fullscreen.crx)
 
 ## 举一些实际的使用场景
