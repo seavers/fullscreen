@@ -5,47 +5,47 @@ var $$ = function(selector) {
 	return document.querySelectorAll(selector);
 }
 
-
+var SIGN = '_FULL_SCREEN_PICTURE_VIEWER';
 var threshold = 350;
 var bigdiv = document.createElement('div');
 var inited = false;
 
 function init() {
-    initBox();
-    hiddenEmbed();
     inited = true;
-}
-
-function initBox() {
 	bigdiv.id = 'fullscreen-picture-viewer-bigdiv';
 	$('body').appendChild(bigdiv);
 }
 
-function hiddenEmbed() {
-	var embeds = $$('embed,iframe');
-	for(var i = 0; i < embeds.length; i++) {
-		embeds[i].style.display = 'none';
-	}
-}
-
 function refresh() {
-	bigdiv.innerHTML = '';
-	refreshImage();	
-	bigdiv.style.height=document.body.scrollHeight+'px';
+	bigdiv.innerHTML = refreshImage();
 }
 
 function refreshImage() {
+	var newdiv = document.createElement('div');
     var imgs = $$('img')
     for(var i = 0; i < imgs.length; i++) {
         var img = imgs[i];
+		if(img[SIGN]) continue;
+
+		var min = Math.min(150, threshold);
+		if(img.naturalWidth < min || img.naturalHeight < min) {
+			continue;
+		}
         if(img.naturalWidth >= threshold || img.naturalHeight >= threshold) {
-            //console.log(img);
             var img2 = document.createElement('img');
             img2.src = img.src;
-            //img2.style.cssText = 'width:100%';
-            bigdiv.appendChild(img2);
+			img[SIGN] = img2[SIGN] = true;
+			if(img.parentNode.tagName == 'A') {
+				var anchor = document.createElement('a');
+				anchor.href = img.parentNode.href;
+				newdiv.appendChild(anchor);
+				anchor.appendChild(img2);
+				continue;
+			}
+            newdiv.appendChild(img2);
         }
     }
+	return newdiv.innerHTML;
 }
 
 function toggle() {
@@ -53,12 +53,10 @@ function toggle() {
 		init();
 	}
 
-	if(bigdiv.style.display == 'none') {
+	var ok = document.body.classList.toggle('full-screen-picture-viewer');
+	if(ok) {
 		refresh();
 		document.body.scrollTop = 0;
-		bigdiv.style.display = 'block';
-	} else {
-		bigdiv.style.display = 'none';
 	}
 }
 
@@ -85,10 +83,15 @@ document.addEventListener('keydown', function(ev) {
 		}
 		console.log('thresold=' + threshold);
 	}
+
 	refresh();
 });
 
 document.addEventListener('dblclick', function(ev) {
 	toggle();
 });
+
+
+
+
 
